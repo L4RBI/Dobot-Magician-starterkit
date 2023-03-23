@@ -5,7 +5,7 @@ import sys
 import bezierCurve as bCurve
 import catMullRomCurve as sCurve
 import matplotlib.pyplot as plt
-sys.path.insert(1, './DLL')
+sys.path.insert(1, './DLL')  # retireve the DLLs
 
 
 """-------The DoBot Control Class-------
@@ -45,6 +45,7 @@ class DoBotArm:
             print("You're already connected")
         else:
             state = dType.ConnectDobot(self.api, "", 115200)[0]
+            # if everything connected proprely set up the configuration
             if(state == dType.DobotConnect.DobotConnect_NoError):
                 print("Connect status:", CON_STR[state])
                 dType.SetQueuedCmdClear(self.api)
@@ -94,6 +95,7 @@ class DoBotArm:
             self.api, dType.PTPMode.PTPMOVLXYZMode, x, y, z, 0)[0]
         self.commandDelay(lastIndex)
 
+    # draws a curve, if 0 draws bezier else draws catmull
     def drawCurve(self, curve=0):
         print('Move the arm to the z position of the paper, when you are done enter OK in the console:')
         _ = input()
@@ -107,7 +109,6 @@ class DoBotArm:
             self.moveArmXYZ(X[i], Y[i],  Z[i])
 
     # Returns to home location
-
     def moveHome(self):
         lastIndex = dType.SetPTPCmd(
             self.api, dType.PTPMode.PTPMOVLXYZMode, self.homeX, self.homeY, self.homeZ, 0)[0]
