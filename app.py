@@ -12,22 +12,18 @@ def main():
     homeX, homeY, homeZ = 250, 0, 50
     # Create DoBot Class Object with home position x,y,z
     ctrlBot = Dbt.DoBotArm(homeX, homeY, homeZ)
-    # important to clar the alarms and errors
+    # important to clear the alarms and errors
     dType.ClearAllAlarmsState(ctrlBot.api)
     ctrlBot.moveHome()
     ctrlBot.moveArmXYZ(250, -200, 40)
-    # ctrlBot.toggleSuction()
+
+    # # bezier curve
+    # ctrlBot.performCurve(ctrlP=4, curve=0) # perfoms the trajectory in 3D space
+    # ctrlBot.drawCurve(ctrlP=4, curve=0) # draws the curve on a 2D support
 
     # # catMullRom
-    x, y, z, X, Y, Z = bCurve.genCurve(nbPoints=5, random=True)
-    for i in range(len(X)):
-        ctrlBot.moveArmXYZ(X[i], Y[i], Z[i])
-    ctrlBot.moveHome()
-
-    # # catMullRom
-    #x, y, z, X, Y, Z = sCurve.genCurve(nbPoints=10)
-    # for i in range(len(X)):
-    #     ctrlBot.moveArmXYZ(X[i], Y[i], Z[i])
+    # ctrlBot.performCurve(ctrlP=10, curve=1)  # perfoms the trajectory in 3D space
+    # ctrlBot.drawCurve(ctrlP=10, curve=1) # draws the curve on a 2D support
 
 
 main()

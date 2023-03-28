@@ -56,7 +56,7 @@ class DoBotArm:
                     self.api, 200, 200, 200, 200, 200, 200, 200, 200, isQueued=1)
                 dType.SetPTPCommonParams(self.api, 100, 100, isQueued=1)
 
-                #dType.SetHOMECmd(self.api, temp=0, isQueued=1)
+                dType.SetHOMECmd(self.api, temp=0, isQueued=1)
                 self.connected = True
                 return self.connected
             else:
@@ -66,7 +66,7 @@ class DoBotArm:
 
     # Returns to home location and then disconnects
     def dobotDisconnect(self):
-        # self.moveHome()
+        self.moveHome()
         dType.DisconnectDobot(self.api)
 
     # Delays commands
@@ -96,15 +96,24 @@ class DoBotArm:
         self.commandDelay(lastIndex)
 
     # draws a curve, if 0 draws bezier else draws catmull
-    def drawCurve(self, curve=0):
+    def drawCurve(self, ctrlP=5, curve=0):
         print('Move the arm to the z position of the paper, when you are done enter OK in the console:')
         _ = input()
         zLevel = dType.GetPose(self.api)[2]
         self.moveHome()
         if curve == 0:  # bezier curve
-            x, y, z, X, Y, Z = bCurve.genCurve(3, True, 100, True, zLevel)
+            x, y, z, X, Y, Z = bCurve.genCurve(ctrlP, True, 100, True, zLevel)
         else:
-            x, y, z, X, Y, Z = sCurve.genCurve(10, 200, True, zLevel)
+            x, y, z, X, Y, Z = sCurve.genCurve(ctrlP, 200, True, zLevel)
+        for i in range(len(X)):
+            self.moveArmXYZ(X[i], Y[i],  Z[i])
+
+    # performs a curve, if 0 draws bezier else draws catmull
+    def performCurve(self, ctrlP=5, curve=0):
+        if curve == 0:  # bezier curve
+            x, y, z, X, Y, Z = bCurve.genCurve(ctrlP, True, 100)
+        else:
+            x, y, z, X, Y, Z = sCurve.genCurve(ctrlP, 10, 200)
         for i in range(len(X)):
             self.moveArmXYZ(X[i], Y[i],  Z[i])
 
